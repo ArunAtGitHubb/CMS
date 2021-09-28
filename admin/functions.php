@@ -1,61 +1,29 @@
 <?php
 
 function redirect($location){
-
-
     header("Location:" . $location);
     exit;
-
 }
 
 
 function ifItIsMethod($method=null){
-
-    if($_SERVER['REQUEST_METHOD'] == strtoupper($method)){
-
-        return true;
-
-    }
-
-    return false;
-
+    return $_SERVER['REQUEST_METHOD'] == strtoupper($method);
 }
 
 function isLoggedIn(){
-
-    if(isset($_SESSION['user_role'])){
-
-        return true;
-
-
-    }
-
-
-   return false;
-
+    return isset($_SESSION['user_role']);
 }
 
 function checkIfUserIsLoggedInAndRedirect($redirectLocation=null){
-
     if(isLoggedIn()){
-
         redirect($redirectLocation);
-
     }
-
 }
 
 
-
-
-
 function escape($string) {
-
 global $connection;
-
 return mysqli_real_escape_string($connection, trim($string));
-
-
 }
 
 
@@ -67,15 +35,11 @@ if(!$msg) {
 $_SESSION['message']= $msg;
 
 } else {
-
 $msg = "";
-
 
     }
 
-
 }
-
 
 function display_message() {
 
@@ -83,17 +47,10 @@ function display_message() {
         echo $_SESSION['message'];
         unset($_SESSION['message']);
     }
-
-
 }
 
 
-
-
 function users_online() {
-
-
-
     if(isset($_GET['onlineusers'])) {
 
     global $connection;
@@ -116,92 +73,48 @@ function users_online() {
             if($count == NULL) {
 
             mysqli_query($connection, "INSERT INTO users_online(session, time) VALUES('$session','$time')");
-
-
             } else {
 
             mysqli_query($connection, "UPDATE users_online SET time = '$time' WHERE session = '$session'");
-
-
             }
 
         $users_online_query =  mysqli_query($connection, "SELECT * FROM users_online WHERE time > '$time_out'");
         echo $count_user = mysqli_num_rows($users_online_query);
-
-
     }
-
-
-
-
-
-
     } // get request isset()
-
-
 }
-
 users_online();
-
-
-
 
 function confirmQuery($result) {
     
     global $connection;
-
     if(!$result ) {
-          
           die("QUERY FAILED ." . mysqli_error($connection));
-   
-          
       }
-    
-
 }
-
-
 
 function insert_categories(){
     
     global $connection;
-
         if(isset($_POST['submit'])){
-
             $cat_title = $_POST['cat_title'];
-
         if($cat_title == "" || empty($cat_title)) {
-        
              echo "This Field should not be empty";
-    
     } else {
-
-
-
-
 
     $stmt = mysqli_prepare($connection, "INSERT INTO categories(cat_title) VALUES(?) ");
 
     mysqli_stmt_bind_param($stmt, 's', $cat_title);
 
     mysqli_stmt_execute($stmt);
-
-
         if(!$stmt) {
         die('QUERY FAILED'. mysqli_error($connection));
         
                   }
-
-
-        
              }
 
-             
     mysqli_stmt_close($stmt);
-   
-        
        }
-
 }
 
 
@@ -222,9 +135,7 @@ global $connection;
    echo "<td><a href='categories.php?delete={$cat_id}'>Delete</a></td>";
    echo "<td><a href='categories.php?edit={$cat_id}'>Edit</a></td>";
     echo "</tr>";
-
     }
-
 
 }
 
@@ -237,12 +148,7 @@ global $connection;
     $query = "DELETE FROM categories WHERE cat_id = {$the_cat_id} ";
     $delete_query = mysqli_query($connection,$query);
     header("Location: categories.php");
-
-
     }
-            
-
-
 }
 
 
@@ -251,17 +157,11 @@ global $connection;
 if(isset($_GET['unapprove'])){
     
     $the_comment_id = $_GET['unapprove'];
-    
     $query = "UPDATE comments SET comment_status = 'unapproved' WHERE comment_id = $the_comment_id ";
     $unapprove_comment_query = mysqli_query($connection, $query);
     header("Location: comments.php");
     
-    
     }
-
-    
-    
-
 }
 
 
@@ -272,48 +172,20 @@ function is_admin($username) {
     $query = "SELECT user_role FROM users WHERE username = '$username'";
     $result = mysqli_query($connection, $query);
     confirmQuery($result);
-
     $row = mysqli_fetch_array($result);
 
-
-    if($row['user_role'] == 'admin'){
-
-        return true;
-
-    }else {
-
-
-        return false;
-    }
-
+    return $row['user_role'] == 'admin';
 }
-
-
 
 function username_exists($username){
 
     global $connection;
-
     $query = "SELECT username FROM users WHERE username = '$username'";
     $result = mysqli_query($connection, $query);
     confirmQuery($result);
 
-    if(mysqli_num_rows($result) > 0) {
-
-        return true;
-
-    } else {
-
-        return false;
-
-    }
-
-
-
-
-
+    return mysqli_num_rows($result) > 0;
 }
-
 
 
 function email_exists($email){
@@ -325,18 +197,7 @@ function email_exists($email){
     $result = mysqli_query($connection, $query);
     confirmQuery($result);
 
-    if(mysqli_num_rows($result) > 0) {
-
-        return true;
-
-    } else {
-
-        return false;
-
-    }
-
-
-
+    return mysqli_num_rows($result) > 0;
 }
 
 
@@ -373,9 +234,7 @@ function register_user($username, $email, $password){
      $query = "SELECT * FROM users WHERE username = '{$username}' ";
      $select_user_query = mysqli_query($connection, $query);
      if (!$select_user_query) {
-
          die("QUERY FAILED" . mysqli_error($connection));
-
      }
 
 
@@ -396,31 +255,11 @@ function register_user($username, $email, $password){
              $_SESSION['lastname'] = $db_user_lastname;
              $_SESSION['user_role'] = $db_user_role;
 
-
-
              redirect("/cms/");
 
-
          } else {
-
-
              return false;
-
-
-
          }
-
-
-
      }
-
      return true;
-
  }
-
-
-
-
-
-
-
