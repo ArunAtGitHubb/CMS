@@ -12,9 +12,14 @@
         <tbody>
         <?php 
             
-            $query = "SELECT * FROM users";
-            $select_users = mysqli_query($connection,$query);  
-            while($row = mysqli_fetch_assoc($select_users)) {
+            $req_query = "SELECT user_id FROM admin_user_request";
+            $requested_users = mysqli_query($connection, $req_query);  
+            while($users = mysqli_fetch_assoc($requested_users)) {
+                $id = $users['user_id'];
+                $query = "SELECT * FROM users WHERE user_id = '$id'";
+                $result = mysqli_query($connection, $query);
+
+                while($row = mysqli_fetch_assoc($result)) {
                 $user_id             = $row['user_id'];
                 $username            = $row['username'];
                 $user_password       = $row['user_password'];
@@ -23,8 +28,6 @@
                 $user_email          = $row['user_email'];
                 $user_image          = $row['user_image'];
                 $user_role           = $row['user_role'];
-            
-                
                 echo "<tr>";
                 
                 echo "<td>$user_id </td>";
@@ -39,6 +42,7 @@
                 echo "<td><a href='users.php?source=edit_user&edit_user={$user_id}'>Edit</a></td>";
                 echo "<td><a href='users.php?delete={$user_id}'>Delete</a></td>";
                 echo "</tr>";
+                }
             }
         ?>
         </tbody>
@@ -61,7 +65,6 @@ if(isset($_GET['change_to_sub'])){
     $change_to_sub_query = mysqli_query($connection, $query);
     header("Location: users.php");
 }
-
 
 if(isset($_GET['delete'])){
     if(isset($_SESSION['user_role'])) {

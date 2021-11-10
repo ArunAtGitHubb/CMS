@@ -1,13 +1,13 @@
-<?php  include "includes/db.php"; ?>
- <?php  include "includes/header.php"; ?>
+    <?php  include "includes/db.php"; ?>
+    <?php  include "includes/header.php"; ?>
 
 
     <!-- Navigation -->
-    
+
     <?php  include "includes/navigation.php"; ?>
 
-    
- 
+
+
     <!-- Page Content -->
     <div class="container">
 
@@ -16,22 +16,13 @@
             <!-- Blog Entries Column -->
             
             <div class="col-md-8">
-               
-             <?php
-
-      
-
-             $per_page = 10;
-
+                
+                <?php
+                $per_page = 7;
 
             if(isset($_GET['page'])) {
-
-
             $page = $_GET['page'];
-
             } else {
-
-
                 $page = "";
             }
 
@@ -47,37 +38,19 @@
             }
 
 
-         if(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin' ) {
-
-
+            if(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin' ) {
         $post_query_count = "SELECT * FROM posts";
-
-
-         } else {
-
-         $post_query_count = "SELECT * FROM posts WHERE post_status = 'published'";
-
-         }   
-
+            } else {
+            $post_query_count = "SELECT * FROM posts WHERE post_status = 'published'";
+            }   
         $find_count = mysqli_query($connection,$post_query_count);
         $count = mysqli_num_rows($find_count);
 
         if($count < 1) {
-
-
             echo "<h1 class='text-center'>No posts available</h1>";
 
-
-
-
         } else {
-
-
         $count  = ceil($count /$per_page);
-
-
-
-                
         $query = "SELECT * FROM posts LIMIT $page_1, $per_page";
         $select_all_posts_query = mysqli_query($connection,$query);
 
@@ -89,19 +62,11 @@
         $post_image = $row['post_image'];
         $post_content = substr($row['post_content'],0,400);
         $post_status = $row['post_status'];
-        
-
-    
         ?>
-        
-     
-
                 <!-- First Blog Post -->
 
-              
-
                 <h2>
-                    <a href="post/<?php echo $post_id; ?>"><?php echo $post_title ?></a>
+                    <?php echo $post_title ?>
                 </h2>
                 <p class="lead">
                     by <a href="author_posts.php?author=<?php echo $post_author ?>&p_id=<?php echo $post_id; ?>"><?php echo $post_author ?></a>
@@ -121,35 +86,15 @@
                 <a class="btn btn-primary" href="post.php?p_id=<?php echo $post_id; ?>">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
 
                 <hr>
-                
-
-   <?php }  } ?>
-
-                
-                
-                
-                
-                
-
-              
-    
-
+    <?php }  } ?>
             </div>
-            
-              
-
             <!-- Blog Sidebar Widgets Column -->
             
             
             <?php include "includes/sidebar.php";?>
-             
-
         </div>
         <!-- /.row -->
-
         <hr>
-
-
         <ul class="pager">
 
         <?php 
@@ -158,45 +103,15 @@
 
 
         for($i =1; $i <= $count; $i++) {
-
-
         if($i == $page) {
-
-             echo "<li '><a class='active_link' href='index.php?page={$i}'>{$i}</a></li>";
-
-
+                echo "<li '><a class='active_link' href='index.php?page={$i}'>{$i}</a></li>";
         }  else {
-
             echo "<li '><a href='index.php?page={$i}'>{$i}</a></li>";
-
-
-
-        
-         
-
         }
-
-        
-        
-
-
-
-           
         }
-
-
-
-
-
-
-         ?>
-            
-
-
-
-
+    ?>
         </ul>
 
-   
 
-<?php include "includes/footer.php";?>
+
+    <?php include "includes/footer.php";?>

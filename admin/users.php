@@ -30,7 +30,6 @@ if (!is_admin($_SESSION['username'])) {
                     }
 
                     switch ($source) {
-
                         case 'add_user':
                             include "includes/add_user.php";
                             break;

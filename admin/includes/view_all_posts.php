@@ -5,7 +5,7 @@ if(isset($_POST['checkBoxArray'])) {
     foreach($_POST['checkBoxArray'] as $postValueId ){
         $bulk_options = $_POST['bulk_options'];
         
-  switch($bulk_options) {
+switch($bulk_options) {
         case 'published':
                 $query = "UPDATE posts SET post_status = '{$bulk_options}' WHERE post_id = {$postValueId}  ";
                 $update_to_published_status = mysqli_query($connection, $query);
@@ -36,13 +36,13 @@ if(isset($_POST['checkBoxArray'])) {
             $post_image         = $row['post_image'] ; 
             $post_tags          = $row['post_tags']; 
             $post_content       = $row['post_content'];
-          }
-          $query = "INSERT INTO posts(post_category_id, post_title, post_author, post_date,post_image,post_content,post_tags,post_status) ";
-          $query .= "VALUES({$post_category_id},'{$post_title}','{$post_author}',now(),'{$post_image}','{$post_content}','{$post_tags}', '{$post_status}') ";
-          $copy_query = mysqli_query($connection, $query);
+        }
+        $query = "INSERT INTO posts(post_category_id, post_title, post_author, post_date,post_image,post_content,post_tags,post_status) ";
+        $query .= "VALUES({$post_category_id},'{$post_title}','{$post_author}',now(),'{$post_image}','{$post_content}','{$post_tags}', '{$post_status}') ";
+        $copy_query = mysqli_query($connection, $query);
             if(!$copy_query ) {
                 die("QUERY FAILED" . mysqli_error($connection));
-               }   
+            }   
             break;
         }
     }
@@ -51,7 +51,7 @@ if(isset($_POST['checkBoxArray'])) {
 <form action="" method='post'>
 
 <table class="table table-bordered table-hover">
-              
+            
 
         <div id="bulkOptionContainer" class="col-xs-4">
 
@@ -60,7 +60,7 @@ if(isset($_POST['checkBoxArray'])) {
         <option value="published">Publish</option>
         <option value="draft">Draft</option>
         <option value="delete">Delete</option>
-         <option value="clone">Clone</option>
+        <option value="clone">Clone</option>
         </select>
 
         </div>
@@ -68,7 +68,7 @@ if(isset($_POST['checkBoxArray'])) {
 <input type="submit" name="submit" class="btn btn-success" value="Apply">
 <a class="btn btn-primary" href="posts.php?source=add_post">Add New</a>
 
- </div>
+</div>
 
                 <thead>
                     <tr>
@@ -89,8 +89,8 @@ if(isset($_POST['checkBoxArray'])) {
                     </tr>
                 </thead>
                 
-                      <tbody>
-  <?php 
+                    <tbody>
+<?php 
     
     $query = "SELECT * FROM posts ORDER BY post_id DESC ";
     $select_posts = mysqli_query($connection,$query);  
@@ -112,12 +112,12 @@ if(isset($_POST['checkBoxArray'])) {
         
         ?>
         
- <td><input class='checkBoxes' type='checkbox' name='checkBoxArray[]' value='<?php echo $post_id; ?>'></td>
+<td><input class='checkBoxes' type='checkbox' name='checkBoxArray[]' value='<?php echo $post_id; ?>'></td>
 
         <?php
         echo "<td>$post_id </td>";
         if(!empty($post_author)) {
-             echo "<td>$post_author</td>";
+            echo "<td>$post_author</td>";
         } elseif(!empty($post_user)) {
             echo "<td>$post_user</td>";
         }
@@ -136,53 +136,41 @@ if(isset($_POST['checkBoxArray'])) {
         }
 
         echo "<td>$post_status</td>";
-echo "<td><img width='100' src='../images/$post_image' alt='image'></td>";
+        echo "<td><img width='100' src='../images/$post_image' alt='image'></td>";
         echo "<td>$post_tags</td>";
 
-        $query = "SELECT * FROM comments WHERE comment_post_id = $post_id";
+        $query = "SELECT COUNT(*) AS comment_count FROM comments WHERE comment_post_id = $post_id";
         $send_comment_query = mysqli_query($connection, $query);
 
-        $row = mysqli_fetch_array($send_comment_query);
-        $comment_id = $row['comment_id'];
-        $count_comments = mysqli_num_rows($send_comment_query);
+        $row = mysqli_fetch_assoc($send_comment_query);
 
+        $count_comments = $row['comment_count'];
 
         echo "<td><a href='post_comments.php?id=$post_id'>$count_comments</a></td>";
-
-
 
         echo "<td>$post_date </td>";
         echo "<td><a class='btn btn-primary' href='../post.php?p_id={$post_id}'>View Post</a></td>";
         echo "<td><a class='btn btn-info' href='posts.php?source=edit_post&p_id={$post_id}'>Edit</a></td>";
-
-
         ?>
 
 
         <form method="post">
-
             <input type="hidden" name="post_id" value="<?php echo $post_id ?>">
-
-         <?php   
-
+        <?php   
             echo '<td><input class="btn btn-danger" type="submit" name="delete" value="Delete"></td>';
 
-          ?>
+        ?>
         </form>
         <?php
-         // echo "<td><a rel='$post_id' href='javascript:void(0)' class='delete_link'>Delete</a></td>";
-
-        // echo "<td><a onClick=\"javascript: return confirm('Are you sure you want to delete'); \" href='posts.php?delete={$post_id}'>Delete</a></td>";
         echo "<td><a href='posts.php?reset={$post_id}'>{$post_views_count}</a></td>";
         echo "</tr>";
     }
 
-      ?>
+    ?>
             </tbody>
             </table>
             
             </form>
-
 <?php 
 
 if(isset($_POST['delete'])){
@@ -192,10 +180,7 @@ if(isset($_POST['delete'])){
     $query = "DELETE FROM posts WHERE post_id = {$the_post_id} ";
     $delete_query = mysqli_query($connection, $query);
     header("Location: /cms/admin/posts.php");
-    
-    
 }
-
 
 if(isset($_GET['reset'])){
     
@@ -204,9 +189,7 @@ if(isset($_GET['reset'])){
     $query = "UPDATE posts SET post_views_count = 0 WHERE post_id = $the_post_id  ";
     $reset_query = mysqli_query($connection, $query);
     header("Location: posts.php");
-
 }
-
 ?>
 
 <script>
@@ -223,12 +206,8 @@ if(isset($_GET['reset'])){
     });
 
 
-  <?php if(isset($_SESSION['message'])){
-         unset($_SESSION['message']);
-     }
-         ?>
+<?php if(isset($_SESSION['message'])){
+        unset($_SESSION['message']);
+    }
+        ?>
 </script>
-
-            
-            
-      

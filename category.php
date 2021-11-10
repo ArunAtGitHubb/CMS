@@ -1,12 +1,12 @@
 <?php  include "includes/db.php"; ?>
- <?php  include "includes/header.php"; ?>
+<?php  include "includes/header.php"; ?>
 
 
     <!-- Navigation -->
     
     <?php  include "includes/navigation.php"; ?>
     
- 
+
     <!-- Page Content -->
     <div class="container">
 
@@ -15,10 +15,7 @@
             <!-- Blog Entries Column -->
             
             <div class="col-md-8">
-               
-               <?php
-
-
+              <?php
     if(isset($_GET['category'])){
         
       $post_category_id  = $_GET['category'];
@@ -26,22 +23,12 @@
 
 
 
-if(isset($_SESSION['username']) && is_admin($_SESSION['username'])){
-
-
-
-
-
-      $stmt1 = mysqli_prepare($connection, "SELECT post_id, post_title, post_author, post_date, post_image, post_content FROM posts WHERE post_category_id = ?");
-
-
-
-
+  if(isset($_SESSION['username']) && is_admin($_SESSION['username'])){
+    $stmt1 = mysqli_prepare($connection, "SELECT post_id, post_title, post_author, post_date, post_image, post_content FROM posts WHERE post_category_id = ?");
     } else {
-
-         $stmt2 = mysqli_prepare($connection, "SELECT post_id, post_title, post_author, post_date, post_image, post_content FROM posts WHERE post_category_id = ? AND post_status = ? ");
-
-         $published = 'published';
+        $stmt2 = mysqli_prepare($connection, "SELECT post_id, post_title, post_author, post_date, post_image, post_content FROM posts WHERE post_category_id = ? AND post_status = ? ");
+        
+        $published = 'published';
 
     }
 
@@ -66,7 +53,7 @@ if(isset($_SESSION['username']) && is_admin($_SESSION['username'])){
 
         mysqli_stmt_bind_result($stmt2, $post_id, $post_title, $post_author, $post_date, $post_image, $post_content);
 
-     $stmt = $stmt2;
+    $stmt = $stmt2;
 
     }
 
@@ -76,23 +63,20 @@ if(isset($_SESSION['username']) && is_admin($_SESSION['username'])){
 
 
 
-         // echo "<h1 class='text-center'>No Post available for this category</h1>";
+        // echo "<h1 class='text-center'>No Post available for this category</h1>";
 
 
 
     // } else 
 
-
-
-
     while(mysqli_stmt_fetch($stmt)){
-       
+      
         
         ?>
         
           <h1 class="page-header">
-                 <?php  ?>
-                   
+                <?php  ?>
+                  
                 </h1>
 
                 <!-- First Blog Post -->
@@ -112,23 +96,10 @@ if(isset($_SESSION['username']) && is_admin($_SESSION['username'])){
 
                 <hr>
                 
-   <?php }    }  else {
-
-
-
+  <?php }    }  else {
 
             header("Location: index.php");
-
-
-   }?>
-
-                
-                
-                
-                
-          
-    
-
+  }?>
             </div>
             
               
@@ -137,13 +108,13 @@ if(isset($_SESSION['username']) && is_admin($_SESSION['username'])){
             
             
             <?php include "includes/sidebar.php";?>
-             
+            
 
         </div>
         <!-- /.row -->
 
         <hr>
 
-   
+  
 
 <?php include "includes/footer.php";?>
